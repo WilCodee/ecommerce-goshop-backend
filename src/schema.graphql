@@ -1,0 +1,196 @@
+type Query {
+  shoes(_id: ID, limit: Int): [Shoes!]!
+  tshirt(_id: ID, limit: Int): [Tshirt!]!
+  pants(_id: ID, limit: Int): [Pants!]!
+  hats(_id: ID, limit: Int): [Hats!]!
+}
+
+type Mutation {
+  shoesCreate(data: inputCreateShoes): Shoes!
+  tshirtCreate(data: inputCreateTshirt): Tshirt!
+  pantsCreate(data: inputCreatePants): Pants!
+  hatsCreate(data: inputCreateHats): Hats!
+
+  shoesUpdate(_id: ID!, data: inputUpdateShoes): String
+  tshirtUpdate(_id: ID!, data: inputUpdateTshirt): Tshirt!
+  pantsUpdate(_id: ID!, data: inputUpdatePants): Pants!
+  hatsUpdate(_id: ID!, data: inputUpdateHats): Hats!
+
+  shoesDelete(_id: ID!): Shoes!
+  tshirtDelete(_id: ID!): Tshirt!
+  pantsDelete(_id: ID!): Pants!
+  hatsDelete(_id: ID!): Hats!
+
+  stripe(data: inputStripe): String
+}
+
+input inputStripe {
+  id: ID!
+  amount: Int!
+}
+type Stripe {
+  id: ID!
+  amount: Int!
+}
+
+type Admin {
+  name: String
+  nickName: String
+  admin: Boolean
+  age: Int
+  phoneNumber: Int
+  email: String
+  gender: String
+  country: String
+  sales: [String]
+}
+
+type User {
+  name: String
+  nickname: String
+  age: Int
+  phoneNumber: Int
+  address: String
+  gender: String
+  country: String
+  shopping: [String]
+  phoneNumber: Int
+  email: String
+  card: UserCard
+}
+type UserCard {
+  cardNumber: Int
+  CVC: Int
+  data: Int
+}
+
+input inputCreateShoes {
+  brand: String!
+  model: String!
+  description: String!
+  price: Int!
+  stock: Int!
+  gender: String!
+  type: String!
+  material: String!
+}
+input inputUpdateShoes {
+  brand: String
+  model: String
+  description: String
+  price: Int
+  stock: Int
+  gender: String
+  type: String
+  material: String
+}
+type Shoes {
+  _id: ID!
+  brand: String!
+  model: String!
+  description: String!
+  price: Int!
+  stock: Int!
+  gender: String!
+  type: String! #zapatilas zapato
+  material: String!
+  imgs: [String!]!
+  size: [Int!]!
+}
+
+input inputCreateTshirt {
+  brand: String!
+  model: String!
+  description: String!
+  price: Int!
+  stock: Int!
+  gender: String!
+  material: String!
+}
+input inputUpdateTshirt {
+  brand: String
+  model: String
+  description: String
+  price: Int
+  stock: Int
+  gender: String
+  material: String
+}
+type Tshirt {
+  _id: ID!
+  brand: String!
+  model: String!
+  description: String!
+  price: Int!
+  stock: Int!
+  gender: String!
+  material: String!
+  imgs: [String!]!
+  size: [Int!]!
+}
+
+input inputCreatePants {
+  brand: String!
+  model: String!
+  description: String!
+  price: Int!
+  stock: Int!
+  gender: String!
+  material: String!
+  type: String! #invierno vrano
+}
+input inputUpdatePants {
+  brand: String
+  model: String
+  description: String
+  price: Int
+  stock: Int
+  gender: String
+  material: String
+  type: String
+}
+type Pants {
+  _id: ID!
+  brand: String!
+  model: String!
+  description: String!
+  price: Int!
+  stock: Int!
+  gender: String!
+  material: String!
+  type: String! #invierno vrano
+  imgs: [String!]!
+  size: [Int!]!
+}
+
+input inputCreateHats {
+  brand: String!
+  model: String!
+  description: String!
+  price: Int!
+  stock: Int!
+  gender: String!
+  material: String!
+}
+input inputUpdateHats {
+  brand: String
+  model: String
+  description: String
+  price: Int
+  stock: Int
+  gender: String
+  material: String
+}
+type Hats {
+  _id: ID!
+  brand: String!
+  model: String!
+  description: String!
+  price: Int!
+  stock: Int!
+  gender: String!
+  material: String!
+  # type: String! #invierno vrano
+  imgs: [String!]!
+  size: [Int!]!
+}

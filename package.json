@@ -1,7 +1,7 @@
 {
   "name": "settings-back",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "main.js",
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist",
@@ -16,7 +16,9 @@
   "dependencies": {
     "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",
-    "graphql-yoga": "^1.18.3"
+    "graphql-yoga": "^1.18.3",
+    "mongoose": "5.11.15",
+    "stripe": "^8.137.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.0",

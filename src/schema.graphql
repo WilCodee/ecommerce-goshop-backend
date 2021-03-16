@@ -6,6 +6,9 @@ type Query {
 }
 
 type Mutation {
+  signUpUser(data: inputSignUpUser): User!
+  loginUser(email: String!, password: String!): User!
+
   shoesCreate(data: inputCreateShoes): Shoes!
   tshirtCreate(data: inputCreateTshirt): Tshirt!
   pantsCreate(data: inputCreatePants): Pants!
@@ -44,12 +47,23 @@ type Admin {
   country: String
   sales: [String]
 }
-
+input inputSignUpUser {
+  name: String!
+  nickname: String
+  age: Int
+  address: String
+  gender: String
+  country: String
+  shopping: [String]
+  phoneNumber: Int
+  email: String!
+  password: String!
+  card: inputUserCard
+}
 type User {
   name: String
   nickname: String
   age: Int
-  phoneNumber: Int
   address: String
   gender: String
   country: String
@@ -57,6 +71,11 @@ type User {
   phoneNumber: Int
   email: String
   card: UserCard
+}
+input inputUserCard {
+  cardNumber: Int
+  CVC: Int
+  data: Int
 }
 type UserCard {
   cardNumber: Int

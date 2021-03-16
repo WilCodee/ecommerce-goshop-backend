@@ -3,6 +3,7 @@ import Query from './resolvers/query'
 import Mutation from './resolvers/mutation'
 import dotenv from 'dotenv'
 dotenv.config()
+import UserDB from './models/UserDB'
 import Shoe from './models/Shoe'
 import Tshirt from './models/Tshirt'
 import Pant from './models/Pant'
@@ -12,7 +13,7 @@ import { Stripe } from 'stripe'
 const stripe = new Stripe(process.env.STRIPE)
 
 const resolvers = { Query, Mutation }
-const context = { Shoe, Tshirt, Pant, Hat, stripe }
+const context = { Shoe, Tshirt, Pant, Hat, stripe, UserDB }
 
 const server = new GraphQLServer({
   typeDefs: './dist/schema.graphql',

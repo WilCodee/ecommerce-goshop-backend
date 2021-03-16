@@ -8,6 +8,7 @@ const adminSchema = new Schema(
     age: Number,
     phoneNumber: Number,
     email: String,
+    password: String,
     gender: String,
     country: String,
     sales: [],

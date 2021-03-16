@@ -1,4 +1,20 @@
 const Mutation = {
+  signUpUser: async (_, { data }, { UserDB }) => {
+    const { email, password } = data
+    if (password.length < 6)
+      throw new Error('Password must be longger than 6 characters')
+    const emailTaken = await UserDB.findOne({ email })
+    if (emailTaken) throw new Error('Email Taken')
+    const newUser = new UserDB({ ...data })
+    return await newUser.save()
+  },
+
+  loginUser: async (_, { email, password }, { UserDB }) => {
+    const userExist = await UserDB.findOne({ email, password })
+    if (!userExist) throw new Error('Email or password incorrect')
+    return userExist
+  },
+
   shoesCreate: async (_, { data }, { Shoe }) => {
     const newShoe = new Shoe({ ...data })
     return await newShoe.save()

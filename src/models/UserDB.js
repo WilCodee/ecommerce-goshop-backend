@@ -8,6 +8,7 @@ const userSchema = new Schema(
     phoneNumber: Number,
     address: String,
     email: String,
+    password: String,
     card: {
       cardNumber: { type: Number },
       CVC: { type: Number },

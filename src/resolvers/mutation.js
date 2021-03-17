@@ -1,21 +1,33 @@
+import {
+  genToken,
+  hastPassword,
+  comparePassword,
+  validateEmail,
+} from '../utils/index'
+
 const Mutation = {
   signUpUser: async (_, { data }, { UserDB }) => {
     const { email, password } = data
-    if (password.length < 6)
-      throw new Error('Password must be longger than 6 characters')
+    validateEmail(email)
     const emailTaken = await UserDB.findOne({ email })
     if (emailTaken) throw new Error('Email Taken')
-    const newUser = new UserDB({ ...data })
-    return await newUser.save()
+    const newPass = hastPassword(password)
+    const newUser = new UserDB({ ...data, password: newPass })
+    return {
+      user: await newUser.save(),
+      token: genToken(newUser._id),
+    }
   },
-
   loginUser: async (_, { email, password }, { UserDB }) => {
-    const userExist = await UserDB.findOne({ email, password })
-    if (!userExist) throw new Error('Email or password incorrect')
-    return userExist
+    validateEmail(email)
+    const userExist = await UserDB.findOne({ email })
+    if (!userExist) throw new Error('User not found')
+    const pass = comparePassword(password, userExist.password)
+    if (!pass) throw new Error('Invalid password')
+    return { user: userExist, token: genToken(userExist._id) }
   },
 
-  shoesCreate: async (_, { data }, { Shoe }) => {
+  shoesCreate: async (_, { data }, { request, Shoe }) => {
     const newShoe = new Shoe({ ...data })
     return await newShoe.save()
   },

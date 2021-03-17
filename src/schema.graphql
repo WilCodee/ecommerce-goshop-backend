@@ -6,8 +6,8 @@ type Query {
 }
 
 type Mutation {
-  signUpUser(data: inputSignUpUser): User!
-  loginUser(email: String!, password: String!): User!
+  signUpUser(data: inputSignUpUser): AuthPayload!
+  loginUser(email: String!, password: String!): AuthPayload!
 
   shoesCreate(data: inputCreateShoes): Shoes!
   tshirtCreate(data: inputCreateTshirt): Tshirt!
@@ -36,7 +36,12 @@ type Stripe {
   amount: Int!
 }
 
+type AuthPayload {
+  user: User!
+  token: String!
+}
 type Admin {
+  _id: ID
   name: String
   nickName: String
   admin: Boolean
@@ -61,6 +66,7 @@ input inputSignUpUser {
   card: inputUserCard
 }
 type User {
+  _id: ID
   name: String
   nickname: String
   age: Int

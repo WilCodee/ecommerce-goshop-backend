@@ -18,8 +18,8 @@ const context = { Shoe, Tshirt, Pant, Hat, stripe, UserDB }
 const server = new GraphQLServer({
   typeDefs: './dist/schema.graphql',
   resolvers,
-  context: req => {
-    return { ...req, ...context }
+  context: request => {
+    return { ...request, ...context }
   },
 })
 
@@ -28,6 +28,4 @@ const opts = {
 }
 
 import './db'
-server.start(opts, ({ port }) =>
-  console.log(`server is running on port ${port}`)
-)
+server.start(opts, ({ port }) => console.log(`http://localhost:${port}`))

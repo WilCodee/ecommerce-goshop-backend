@@ -14,9 +14,11 @@
     "start": "npm run prod"
   },
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",
     "graphql-yoga": "^1.18.3",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "5.11.15",
     "stripe": "^8.137.0"
   },

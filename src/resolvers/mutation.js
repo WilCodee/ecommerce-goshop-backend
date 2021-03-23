@@ -26,6 +26,69 @@ const Mutation = {
     if (!pass) throw new Error('Invalid password')
     return { user: userExist, token: genToken(userExist._id) }
   },
+  userUpdate: async (_, { _id, data }, { UserDB }) => {
+    const userExist = UserDB.findById(_id)
+    if (!userExist) throw new Error('El usuario no existe')
+    const result = await UserDB.findByIdAndUpdate(
+      _id,
+      { ...data },
+      { new: true }
+    )
+    return result
+  },
+
+  signUpAdmin: async (_, { data }, { AdminDB }) => {
+    const { email, password } = data
+    validateEmail(email)
+    const emailTaken = await AdminDB.findOne({ email })
+    if (emailTaken) throw new Error('Email Taken')
+    const newPass = hastPassword(password)
+    const newAdmin = new AdminDB({ ...data, password: newPass })
+    return {
+      admin: await newAdmin.save(),
+      token: genToken(newAdmin._id),
+    }
+  },
+  loginAdmin: async (_, { email, password }, { AdminDB }) => {
+    validateEmail(email)
+    const adminExist = await AdminDB.findOne({ email })
+    if (!adminExist) throw new Error('Admin not found')
+    const pass = comparePassword(password, adminExist.password)
+    if (!pass) throw new Error('Invalid password')
+    return { admin: adminExist, token: genToken(adminExist._id) }
+  },
+  adminUpdate: async (_, { _id, data }, { AdminDB }) => {
+    const adminExist = AdminDB.findById(_id)
+    if (!adminExist) throw new Error('Administrador no existe')
+    const result = await AdminDB.findByIdAndUpdate(
+      _id,
+      { ...data },
+      { new: true }
+    )
+    return result
+  },
+
+  loginThirdServices: async (_, { data }, { UserThirdServices }) => {
+    const { email } = data
+    const emailExist = await UserThirdServices.findOne({ email })
+    if (emailExist)
+      return { thirdServices: emailExist, token: genToken(emailExist._id) }
+    const newUserThirdServices = new UserThirdServices({ ...data })
+    return {
+      thirdServices: await newUserThirdServices.save(),
+      token: genToken(newUserThirdServices._id),
+    }
+  },
+  thirdServicesUpdate: async (_, { _id, data }, { UserThirdServices }) => {
+    const userExist = UserThirdServices.findById(_id)
+    if (!userExist) throw new Error('El usuario no existe')
+    const result = await UserThirdServices.findByIdAndUpdate(
+      _id,
+      { ...data },
+      { new: true }
+    )
+    return result
+  },
 
   shoesCreate: async (_, { data }, { request, Shoe }) => {
     const newShoe = new Shoe({ ...data })
@@ -48,7 +111,7 @@ const Mutation = {
     const productExist = await Shoe.findById(_id)
     if (!productExist) throw new Error('El producto no existe')
     const result = await Shoe.findByIdAndUpdate(_id, { ...data }, { new: true })
-    return 'hili'
+    return result
   },
   tshirtUpdate: async (_, { _id, data }, { Tshirt }) => {
     const productExist = await Tshirt.findById(_id)

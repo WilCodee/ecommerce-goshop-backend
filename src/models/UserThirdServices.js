@@ -1,18 +1,15 @@
 import { Schema, model, models } from 'mongoose'
 
-const userSchema = new Schema(
+const userThirdServicesSchema = new Schema(
   {
     name: {
       type: String,
-      require: true,
-    },
-    lastName: {
-      type: String,
+      required: true,
     },
     nickName: {
       type: String,
     },
-    img: {
+    lastName: {
       type: String,
     },
     age: {
@@ -20,6 +17,10 @@ const userSchema = new Schema(
     },
     phoneNumber: {
       type: Number,
+    },
+    img: {
+      type: String,
+      required: true,
     },
     sendEmail: {
       type: Boolean,
@@ -33,11 +34,7 @@ const userSchema = new Schema(
     // },
     email: {
       type: String,
-      require: true,
-    },
-    password: {
-      type: String,
-      require: true,
+      required: true,
     },
     gender: {
       type: String,
@@ -47,4 +44,5 @@ const userSchema = new Schema(
   { versionKey: false }
 )
 
-export default models.UserDB || model('UserDB', userSchema)
+export default models.UserThirdServicesDB ||
+  model('UserThirdServicesDB', userThirdServicesSchema)

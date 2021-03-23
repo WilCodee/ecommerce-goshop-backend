@@ -19,6 +19,22 @@ const Query = {
     const result = await Hat.find({}).limit(limit)
     return result
   },
+
+  user: async (_, { _id }, { UserDB }) => {
+    const data = await UserDB.findById(_id)
+    if (!data) throw new Error('User not found')
+    return data
+  },
+  admin: async (_, { _id }, { AdminDB }) => {
+    const data = await AdminDB.findById(_id)
+    if (!data) throw new Error('Admin not found')
+    return data
+  },
+  thirdUser: async (_, { _id }, { UserThirdServices }) => {
+    const data = await UserThirdServices.findById(_id)
+    if (!data) throw new Error('User not found')
+    return data
+  },
 }
 
 export default Query

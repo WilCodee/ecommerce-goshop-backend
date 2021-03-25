@@ -16,7 +16,7 @@ const userThirdServicesSchema = new Schema(
       type: Number,
     },
     phoneNumber: {
-      type: Number,
+      type: String,
     },
     img: {
       type: String,

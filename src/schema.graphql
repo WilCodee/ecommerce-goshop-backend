@@ -80,7 +80,7 @@ input inputUserThirdServices {
   nickName: String
   lastName: String
   age: Int
-  phoneNumber: Int
+  phoneNumber: String
   img: String!
   # address: inputAddress
   email: String!
@@ -92,7 +92,7 @@ type UserThirdServices {
   nickName: String
   lastName: String
   age: Int
-  phoneNumber: Int
+  phoneNumber: String
   img: String
   # address: Address
   country: String
@@ -113,7 +113,7 @@ input inputSignUpAdmin {
   admin: Boolean!
   img: String
   age: Int
-  phoneNumber: Int
+  phoneNumber: String
   email: String!
   password: String!
   gender: String
@@ -134,7 +134,7 @@ type Admin {
   admin: Boolean!
   img: String
   age: Int
-  phoneNumber: Int
+  phoneNumber: String
   email: String!
   gender: String
   sales: [String]
@@ -155,7 +155,7 @@ type User {
   reference: String
   gender: String
   shopping: [String]
-  phoneNumber: Int
+  phoneNumber: String
   sendEmail: Boolean
   email: String!
 }
@@ -172,7 +172,7 @@ input inputSignUpUser {
   reference: String
   img: String
   gender: String
-  phoneNumber: Int
+  phoneNumber: String
   email: String!
   sendEmail: Boolean
   password: String!

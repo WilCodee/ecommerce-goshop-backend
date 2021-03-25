@@ -19,7 +19,7 @@ const userSchema = new Schema(
       type: Number,
     },
     phoneNumber: {
-      type: Number,
+      type: String,
     },
     sendEmail: {
       type: Boolean,

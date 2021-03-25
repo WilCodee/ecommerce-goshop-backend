@@ -23,7 +23,7 @@ const adminSchema = new Schema(
       type: Number,
     },
     phoneNumber: {
-      type: Number,
+      type: String,
     },
     email: {
       type: String,

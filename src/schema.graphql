@@ -40,6 +40,16 @@ type Mutation {
   hatsDelete(_id: ID!): Hats!
 
   stripe(data: inputStripe): String
+
+  userCartInc(_id: ID!, data: inputCart!): Boolean!
+  userCartDec(_id: ID!, productId: ID!): Boolean!
+  userShoppingInc(_id: ID!, data: inputShopping!): Shopping!
+
+  thirdUserCartInc(_id: ID!, data: inputCart!): Boolean!
+  thirdUserCartDec(_id: ID!, productId: ID!): Boolean!
+  thirdUserShoppingInc(_id: ID!, data: inputShopping!): Shopping!
+
+  adminSalesInc(data: inputSales!): Boolean!
 }
 
 input inputStripe {
@@ -56,6 +66,34 @@ type AuthPayload {
   admin: Admin
   thirdServices: UserThirdServices
   token: String!
+}
+
+input inputCart {
+  _id: ID!
+  productType: String!
+}
+type Cart {
+  _id: ID!
+  productType: String!
+}
+input inputSales {
+  _id: ID!
+  productType: String!
+}
+
+type Sales {
+  _id: ID!
+  productType: String!
+}
+
+input inputShopping {
+  _id: ID!
+  productType: String!
+}
+
+type Shopping {
+  _id: ID!
+  productType: String!
 }
 
 input inputThirdServicesUpdate {
@@ -103,7 +141,8 @@ type UserThirdServices {
   email: String!
   gender: String
   sendEmail: Boolean
-  shopping: [String]
+  shopping: [Shopping]
+  cart: [Cart]
 }
 
 input inputSignUpAdmin {
@@ -137,7 +176,8 @@ type Admin {
   phoneNumber: String
   email: String!
   gender: String
-  sales: [String]
+  sales: [Sales]
+  products: Int
 }
 
 type User {
@@ -154,10 +194,11 @@ type User {
   addressHome: String
   reference: String
   gender: String
-  shopping: [String]
+  shopping: [Shopping]
   phoneNumber: String
   sendEmail: Boolean
   email: String!
+  cart: [Cart]
 }
 input inputSignUpUser {
   name: String!

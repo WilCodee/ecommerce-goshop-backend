@@ -43,6 +43,7 @@ const userSchema = new Schema(
       type: String,
     },
     shopping: [],
+    cart: [],
   },
   { versionKey: false }
 )

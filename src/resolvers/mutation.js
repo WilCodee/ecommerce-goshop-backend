@@ -166,6 +166,95 @@ const Mutation = {
       return 'hilisss'
     }
   },
+
+  userCartInc: async (_, { _id, data }, { UserDB }) => {
+    try {
+      const userExist = await UserDB.findById(_id)
+      if (!userExist) throw new Error('El Usuario no existe')
+      await UserDB.findByIdAndUpdate(
+        _id,
+        { $push: { cart: { ...data } } },
+        { new: true }
+      )
+      return true
+    } catch (error) {
+      return false
+    }
+  },
+  userCartDec: async (_, { _id, productId }, { UserDB }) => {
+    try {
+      const userExist = await UserDB.findById(_id)
+      if (!userExist) throw new Error('El Usuario no existe')
+      await UserDB.findByIdAndUpdate(_id, {
+        $pull: { cart: { _id: productId } },
+      })
+      return true
+    } catch (error) {
+      return false
+    }
+  },
+  userShoppingInc: async (_, { _id, data }, { UserDB }) => {
+    const userExist = await UserDB.findById(_id)
+    if (!userExist) throw new Error('El Usuario no existe')
+    const result = await UserDB.findByIdAndUpdate(
+      _id,
+      { $push: { shopping: { ...data } } },
+      { new: true }
+    )
+    return result
+  },
+
+  thirdUserCartInc: async (_, { _id, data }, { UserThirdServices }) => {
+    try {
+      const userExist = await UserThirdServices.findById(_id)
+      if (!userExist) throw new Error('El Usuario no existe')
+      await UserThirdServices.findByIdAndUpdate(
+        _id,
+        { $push: { cart: { ...data } } },
+        { new: true }
+      )
+      return true
+    } catch (error) {
+      return false
+    }
+  },
+  thirdUserCartDec: async (_, { _id, productId }, { UserThirdServices }) => {
+    try {
+      const userExist = await UserThirdServices.findById(_id)
+      if (!userExist) throw new Error('El Usuario no existe')
+      await UserThirdServices.findByIdAndUpdate(_id, {
+        $pull: { cart: { _id: productId } },
+      })
+      return true
+    } catch (error) {
+      return false
+    }
+  },
+  thirdUserShoppingInc: async (_, { _id, data }, { UserThirdServices }) => {
+    const userExist = await UserThirdServices.findById(_id)
+    if (!userExist) throw new Error('El Usuario no existe')
+    const result = await UserThirdServices.findByIdAndUpdate(
+      _id,
+      { $push: { shopping: { ...data } } },
+      { new: true }
+    )
+    return result
+  },
+
+  adminSalesInc: async (_, { data }, { AdminDB }) => {
+    try {
+      const adminExist = await AdminDB.findById('60566943bfe0434ed4cf4c01')
+      if (!adminExist) throw new Error('El Administrador no existe')
+      await AdminDB.findByIdAndUpdate(
+        '60566943bfe0434ed4cf4c01',
+        { $push: { sales: { ...data } } },
+        { new: true }
+      )
+      return true
+    } catch (error) {
+      return false
+    }
+  },
 }
 
 export default Mutation

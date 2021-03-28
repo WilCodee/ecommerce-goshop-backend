@@ -37,6 +37,9 @@ const adminSchema = new Schema(
       type: String,
     },
     sales: [],
+    products: {
+      type: Number,
+    },
   },
   { versionKey: false }
 )

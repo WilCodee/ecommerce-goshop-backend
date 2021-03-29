@@ -150,20 +150,43 @@ const Mutation = {
     return await Hat.findByIdAndDelete(_id)
   },
 
-  stripe: async (_, { data }, { stripe }) => {
+  stripe: async (_, { data }, { stripe, pubsub }) => {
     try {
-      const { id, amount } = data
+      const {
+        id,
+        amount,
+        name,
+        imgUser,
+        phoneNumber,
+        email,
+        brand,
+        model,
+        price,
+        imgProduct,
+      } = data
       const payment = await stripe.paymentIntents.create({
         amount,
         currency: 'usd',
         payment_method: id,
         confirm: true,
       })
-      console.log({ payment })
+      pubsub.publish('sells', {
+        sells: {
+          name,
+          imgUser,
+          phoneNumber,
+          email,
+          brand,
+          model,
+          price,
+          imgProduct,
+        },
+      })
     } catch (err) {
       console.log(err)
+      return false
     } finally {
-      return 'hilisss'
+      return true
     }
   },
 

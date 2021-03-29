@@ -39,7 +39,7 @@ type Mutation {
   pantsDelete(_id: ID!): Pants!
   hatsDelete(_id: ID!): Hats!
 
-  stripe(data: inputStripe): String
+  stripe(data: inputStripe): Boolean!
 
   userCartInc(_id: ID!, data: inputCart!): Boolean!
   userCartDec(_id: ID!, productId: ID!): Boolean!
@@ -52,13 +52,44 @@ type Mutation {
   adminSalesInc(data: inputSales!): Boolean!
 }
 
+type Subscription {
+  sells: sellSubscriptionPayload!
+}
+
+type sellSubscriptionPayload {
+  name: String
+  imgUser: String
+  phoneNumber: String
+  email: String
+  brand: String
+  model: String
+  price: Int
+  imgProduct: String
+}
+
 input inputStripe {
   id: ID!
   amount: Int!
+  name: String
+  imgUser: String
+  phoneNumber: String
+  email: String
+  brand: String
+  model: String
+  price: Int
+  imgProduct: String
 }
 type Stripe {
   id: ID!
   amount: Int!
+  name: String
+  imgUser: String
+  phoneNumber: String
+  email: String
+  brand: String
+  model: String
+  price: Int
+  imgProduct: String
 }
 
 type AuthPayload {

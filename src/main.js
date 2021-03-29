@@ -1,6 +1,7 @@
-import { GraphQLServer } from 'graphql-yoga'
+import { GraphQLServer, PubSub } from 'graphql-yoga'
 import Query from './resolvers/query'
 import Mutation from './resolvers/mutation'
+import Subscription from './resolvers/subscription'
 import dotenv from 'dotenv'
 dotenv.config()
 import UserDB from './models/UserDB'
@@ -13,8 +14,8 @@ import Hat from './models/Hat'
 import { Stripe } from 'stripe'
 
 const stripe = new Stripe(process.env.STRIPE)
-
-const resolvers = { Query, Mutation }
+const pubsub = new PubSub()
+const resolvers = { Query, Mutation, Subscription }
 const context = {
   Shoe,
   Tshirt,
@@ -24,6 +25,7 @@ const context = {
   UserDB,
   AdminDB,
   UserThirdServices,
+  pubsub,
 }
 
 const server = new GraphQLServer({

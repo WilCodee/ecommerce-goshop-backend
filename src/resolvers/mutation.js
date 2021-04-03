@@ -4,6 +4,9 @@ import {
   comparePassword,
   validateEmail,
 } from '../utils/index'
+import path from 'path'
+import { createWriteStream } from 'fs'
+import shortId from 'shortid'
 
 const Mutation = {
   signUpUser: async (_, { data }, { UserDB }) => {
@@ -277,6 +280,52 @@ const Mutation = {
     } catch (error) {
       return false
     }
+  },
+
+  singleUpload: async (
+    _,
+    { file, _id, typeProduct },
+    { Shoe, Pant, Tshirt, Hat }
+  ) => {
+    const { createReadStream, filename } = await file
+    const stream = createReadStream()
+    const serverFilename = `${shortId.generate()}-${filename}`
+    const pathName = path.join(__dirname, `../public/images/${serverFilename}`)
+    await stream.pipe(createWriteStream(pathName))
+
+    switch (typeProduct) {
+      case 'Shoes':
+        const productExistShoes = await Shoe.findById(_id)
+        if (!productExistShoes) throw new Error('El producto no existe')
+        await Shoe.findByIdAndUpdate(_id, {
+          $push: { imgs: `http://localhost:5000/${serverFilename}` },
+        })
+        break
+
+      case 'Pants':
+        const productExistPants = await Pant.findById(_id)
+        if (!productExistPants) throw new Error('El producto no existe')
+        await Pant.findByIdAndUpdate(_id, {
+          $push: { imgs: `http://localhost:5000/${serverFilename}` },
+        })
+        break
+      case 'Tshirt':
+        const productExistTshirt = await Tshirt.findById(_id)
+        if (!productExistTshirt) throw new Error('El producto no existe')
+        await Tshirt.findByIdAndUpdate(_id, {
+          $push: { imgs: `http://localhost:5000/${serverFilename}` },
+        })
+        break
+      case 'Hats':
+        const productExistHats = await Hat.findById(_id)
+        if (!productExistHats) throw new Error('El producto no existe')
+        await Hat.findByIdAndUpdate(_id, {
+          $push: { imgs: `http://localhost:5000/${serverFilename}` },
+        })
+        break
+    }
+
+    return { path: `http://localhost:5000/${serverFilename}` }
   },
 }
 

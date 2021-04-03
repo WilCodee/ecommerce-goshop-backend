@@ -50,10 +50,18 @@ type Mutation {
   thirdUserShoppingInc(_id: ID!, data: inputShopping!): Shopping!
 
   adminSalesInc(data: inputSales!): Boolean!
+
+  singleUpload(file: Upload!, _id: ID, typeProduct: String!): File!
 }
 
 type Subscription {
   sells: sellSubscriptionPayload!
+}
+
+scalar Upload
+
+type File {
+  path: String!
 }
 
 type sellSubscriptionPayload {

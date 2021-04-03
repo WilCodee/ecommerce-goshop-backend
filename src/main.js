@@ -2,6 +2,8 @@ import { GraphQLServer, PubSub } from 'graphql-yoga'
 import Query from './resolvers/query'
 import Mutation from './resolvers/mutation'
 import Subscription from './resolvers/subscription'
+import path from 'path'
+import express from 'express'
 import dotenv from 'dotenv'
 dotenv.config()
 import UserDB from './models/UserDB'
@@ -36,8 +38,17 @@ const server = new GraphQLServer({
   },
 })
 
+server.express.use(express.static(path.join(__dirname, 'public/images')))
+
 const opts = {
+  uploads: {
+    maxFileSize: Infinity,
+    maxFiles: Infinity,
+    maxFieldSize: Infinity,
+  },
   port: process.env.PORT,
+  subscriptions: '/subs',
+  playground: '/gql',
 }
 
 import './db'

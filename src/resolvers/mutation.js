@@ -5,7 +5,7 @@ import {
   validateEmail,
 } from '../utils/index'
 import path from 'path'
-import { createWriteStream } from 'fs'
+import { createWriteStream, existsSync, unlinkSync } from 'fs'
 import shortId from 'shortid'
 
 const Mutation = {
@@ -326,6 +326,49 @@ const Mutation = {
     }
 
     return { path: `http://localhost:5000/${serverFilename}` }
+  },
+
+  deleteImgUploaded: async (
+    _,
+    { pathImg, typeProduct, productId },
+    { Shoe, Pant, Tshirt, Hat }
+  ) => {
+    try {
+      const serverPath = pathImg.replace('http://localhost:5000/', '')
+      const fileToDelete = path.join(
+        __dirname,
+        `../public/images/${serverPath}`
+      )
+      if (existsSync(fileToDelete)) {
+        unlinkSync(fileToDelete)
+      } else return false
+      switch (typeProduct) {
+        case 'Shoes':
+          const shoesExists = await Shoe.findById(productId)
+          if (!shoesExists) throw new Error('El product no existe')
+          await Shoe.findByIdAndUpdate(productId, { $pull: { imgs: pathImg } })
+          return true
+        case 'Pants':
+          const pantsExists = await Pant.findById(productId)
+          if (!pantsExists) throw new Error('El product no existe')
+          await Pant.findByIdAndUpdate(productId, { $pull: { imgs: pathImg } })
+          return true
+        case 'Tshirt':
+          const tshirtExists = await Tshirt.findById(productId)
+          if (!tshirtExists) throw new Error('El product no existe')
+          await Tshirt.findByIdAndUpdate(productId, {
+            $pull: { imgs: pathImg },
+          })
+          return true
+        case 'Hats':
+          const hatsExists = await Hat.findById(productId)
+          if (!hatsExists) throw new Error('El product no existe')
+          await Hat.findByIdAndUpdate(productId, { $pull: { imgs: pathImg } })
+          return true
+      }
+    } catch (error) {
+      return false
+    }
   },
 }
 

@@ -52,6 +52,11 @@ type Mutation {
   adminSalesInc(data: inputSales!): Boolean!
 
   singleUpload(file: Upload!, _id: ID, typeProduct: String!): File!
+  deleteImgUploaded(
+    pathImg: String!
+    typeProduct: String!
+    productId: ID!
+  ): Boolean!
 }
 
 type Subscription {

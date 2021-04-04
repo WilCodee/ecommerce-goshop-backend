@@ -24,9 +24,9 @@ const Mutation = {
   loginUser: async (_, { email, password }, { UserDB }) => {
     await validateEmail(email)
     const userExist = await UserDB.findOne({ email })
-    if (!userExist) throw new Error('User not found')
+    if (!userExist) throw new Error('Usuario no existe')
     const pass = comparePassword(password, userExist.password)
-    if (!pass) throw new Error('Invalid password')
+    if (!pass) throw new Error('Contraseña incorrecta')
     return { user: userExist, token: genToken(userExist._id) }
   },
   userUpdate: async (_, { _id, data }, { UserDB }) => {
@@ -44,7 +44,7 @@ const Mutation = {
     const { email, password } = data
     await validateEmail(email)
     const emailTaken = await AdminDB.findOne({ email })
-    if (emailTaken) throw new Error('Email Taken')
+    if (emailTaken) throw new Error('Este Correo ya existe')
     const newPass = hastPassword(password)
     const newAdmin = new AdminDB({ ...data, password: newPass })
     return {
@@ -55,9 +55,9 @@ const Mutation = {
   loginAdmin: async (_, { email, password }, { AdminDB }) => {
     await validateEmail(email)
     const adminExist = await AdminDB.findOne({ email })
-    if (!adminExist) throw new Error('Admin not found')
+    if (!adminExist) throw new Error('Admin no encontrado')
     const pass = comparePassword(password, adminExist.password)
-    if (!pass) throw new Error('Invalid password')
+    if (!pass) throw new Error('Contraseña incorrecta')
     return { admin: adminExist, token: genToken(adminExist._id) }
   },
   adminUpdate: async (_, { _id, data }, { AdminDB }) => {

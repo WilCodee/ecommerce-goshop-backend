@@ -11,9 +11,9 @@ import shortId from 'shortid'
 const Mutation = {
   signUpUser: async (_, { data }, { UserDB }) => {
     const { email, password } = data
-    validateEmail(email)
+    await validateEmail(email)
     const emailTaken = await UserDB.findOne({ email })
-    if (emailTaken) throw new Error('Email Taken')
+    if (emailTaken) throw new Error('Este Correo ya existe')
     const newPass = hastPassword(password)
     const newUser = new UserDB({ ...data, password: newPass })
     return {
@@ -22,7 +22,7 @@ const Mutation = {
     }
   },
   loginUser: async (_, { email, password }, { UserDB }) => {
-    validateEmail(email)
+    await validateEmail(email)
     const userExist = await UserDB.findOne({ email })
     if (!userExist) throw new Error('User not found')
     const pass = comparePassword(password, userExist.password)
@@ -42,7 +42,7 @@ const Mutation = {
 
   signUpAdmin: async (_, { data }, { AdminDB }) => {
     const { email, password } = data
-    validateEmail(email)
+    await validateEmail(email)
     const emailTaken = await AdminDB.findOne({ email })
     if (emailTaken) throw new Error('Email Taken')
     const newPass = hastPassword(password)
@@ -53,7 +53,7 @@ const Mutation = {
     }
   },
   loginAdmin: async (_, { email, password }, { AdminDB }) => {
-    validateEmail(email)
+    await validateEmail(email)
     const adminExist = await AdminDB.findOne({ email })
     if (!adminExist) throw new Error('Admin not found')
     const pass = comparePassword(password, adminExist.password)

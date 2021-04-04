@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
+import verify from 'email-verifier-node'
 
 const SECRET_KEY = 'GOSHOPpro'
 
@@ -32,9 +33,13 @@ export const comparePassword = (reqPass, dbPass) => {
   }
 }
 
-export const validateEmail = email => {
+export const validateEmail = async email => {
   const emailRegex = /^(([^<>()\[\]\\.,:\s@"]+(\.[^<>()\[\]\\.,:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-  if (emailRegex.test(email)) return true
-  throw new Error('Email Invalid')
+  if (emailRegex.test(email)) {
+    const emailGood = await verify.verify_email(email)
+    if (emailGood.errors) throw new Error('Este correo no existe')
+    return true
+  }
+  throw new Error('Correo incorrecto')
 }

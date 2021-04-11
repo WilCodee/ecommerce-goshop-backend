@@ -11,7 +11,7 @@ import shortId from 'shortid'
 const Mutation = {
   signUpUser: async (_, { data }, { UserDB }) => {
     const { email, password } = data
-    await validateEmail(email)
+    // await validateEmail(email)
     const emailTaken = await UserDB.findOne({ email })
     if (emailTaken) throw new Error('Este Correo ya existe')
     const newPass = hastPassword(password)
@@ -53,7 +53,7 @@ const Mutation = {
     }
   },
   loginAdmin: async (_, { email, password }, { AdminDB }) => {
-    await validateEmail(email)
+    // await validateEmail(email)
     const adminExist = await AdminDB.findOne({ email })
     if (!adminExist) throw new Error('Admin no encontrado')
     const pass = comparePassword(password, adminExist.password)
@@ -212,7 +212,7 @@ const Mutation = {
       const userExist = await UserDB.findById(_id)
       if (!userExist) throw new Error('El Usuario no existe')
       await UserDB.findByIdAndUpdate(_id, {
-        $pull: { cart: { _id: productId } },
+        $pull: { cart: { productId } },
       })
       return true
     } catch (error) {
@@ -248,10 +248,14 @@ const Mutation = {
     try {
       const userExist = await UserThirdServices.findById(_id)
       if (!userExist) throw new Error('El Usuario no existe')
-      await UserThirdServices.findByIdAndUpdate(_id, {
-        $pull: { cart: { _id: productId } },
-      })
-      return true
+      const result = await UserThirdServices.findByIdAndUpdate(
+        _id,
+        {
+          $pull: { cart: { productId } },
+        },
+        { new: true }
+      )
+      return result
     } catch (error) {
       return false
     }

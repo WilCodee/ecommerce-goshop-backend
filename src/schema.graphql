@@ -46,7 +46,7 @@ type Mutation {
   userShoppingInc(_id: ID!, data: inputShopping!): Shopping!
 
   thirdUserCartInc(_id: ID!, data: inputCart!): Boolean!
-  thirdUserCartDec(_id: ID!, productId: ID!): Boolean!
+  thirdUserCartDec(_id: ID!, productId: ID!): UserThirdServices!
   thirdUserShoppingInc(_id: ID!, data: inputShopping!): Shopping!
 
   adminSalesInc(data: inputSales!): Boolean!
@@ -113,12 +113,22 @@ type AuthPayload {
 }
 
 input inputCart {
-  _id: ID!
+  img1: String!
+  img2: String!
+  brand: String!
+  model: String!
+  description: String!
   productType: String!
+  productId: ID!
 }
 type Cart {
-  _id: ID!
+  img1: String!
+  img2: String!
+  brand: String!
+  model: String!
+  description: String!
   productType: String!
+  productId: ID!
 }
 input inputSales {
   _id: ID!

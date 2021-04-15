@@ -1,47 +1,47 @@
-import { model, Schema, models } from 'mongoose'
+import { Schema, model, models } from 'mongoose'
 
-const shoeSchema = new Schema(
+const productSchema = new Schema(
   {
     brand: {
       type: String,
-      require: true,
+      required: true,
     },
     model: {
       type: String,
-      require: true,
+      required: true,
     },
     description: {
       type: String,
-      require: true,
+      required: true,
     },
     price: {
       type: Number,
-      require: true,
+      required: true,
     },
     stock: {
       type: Number,
-      require: true,
+      required: true,
     },
     gender: {
       type: String,
-      require: true,
-    },
-    type: {
-      type: String,
-      require: true,
+      required: true,
     },
     material: {
       type: String,
-      require: true,
+      required: true,
     },
-    product: {
+    type: {
       type: String,
       required: true,
     },
-    imgs: [],
+    typeProduct: {
+      type: String,
+      required: true,
+    },
     size: [],
+    imgs: [],
   },
   { versionKey: false }
 )
 
-export default models.Shoe || model('Shoe', shoeSchema)
+export default models.Product || model('Product', productSchema)

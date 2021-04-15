@@ -1,8 +1,5 @@
 type Query {
-  shoes(_id: ID, limit: Int): [Shoes!]!
-  tshirt(_id: ID, limit: Int): [Tshirt!]!
-  pants(_id: ID, limit: Int): [Pants!]!
-  hats(_id: ID, limit: Int): [Hats!]!
+  product(_id: ID, typeProduct: String, limit: Int): [Products!]!
   user(_id: ID!): User!
   admin(_id: ID!): Admin!
   thirdUser(_id: ID!): UserThirdServices!
@@ -23,22 +20,6 @@ type Mutation {
     data: inputThirdServicesUpdate
   ): UserThirdServices!
 
-  shoesCreate(data: inputCreateShoes): Shoes!
-  tshirtCreate(data: inputCreateTshirt): Tshirt!
-  pantsCreate(data: inputCreatePants): Pants!
-  hatsCreate(data: inputCreateHats): Hats!
-
-  shoesUpdate(_id: ID!, data: inputUpdateShoes): Shoes!
-
-  tshirtUpdate(_id: ID!, data: inputUpdateTshirt): Tshirt!
-  pantsUpdate(_id: ID!, data: inputUpdatePants): Pants!
-  hatsUpdate(_id: ID!, data: inputUpdateHats): Hats!
-
-  shoesDelete(_id: ID!): Shoes!
-  tshirtDelete(_id: ID!): Tshirt!
-  pantsDelete(_id: ID!): Pants!
-  hatsDelete(_id: ID!): Hats!
-
   stripe(data: inputStripe): Boolean!
 
   userCartInc(_id: ID!, data: inputCart!): Boolean!
@@ -57,6 +38,10 @@ type Mutation {
     typeProduct: String!
     productId: ID!
   ): Boolean!
+
+  createProduct(data: inputCreateProducts!): Products!
+  updateProduct(_id: ID!, data: inputUpdateProducts!): Products!
+  deleteProduct(_id: ID!): Products!
 }
 
 type Subscription {
@@ -130,11 +115,11 @@ type Cart {
   productType: String!
   productId: ID!
 }
+
 input inputSales {
   _id: ID!
   productType: String!
 }
-
 type Sales {
   _id: ID!
   productType: String!
@@ -144,7 +129,6 @@ input inputShopping {
   _id: ID!
   productType: String!
 }
-
 type Shopping {
   _id: ID!
   productType: String!
@@ -157,7 +141,6 @@ input inputThirdServicesUpdate {
   age: Int
   phoneNumber: String
   img: String
-  # address: inputAddress
   country: String
   city: String
   district: String
@@ -174,7 +157,6 @@ input inputUserThirdServices {
   age: Int
   phoneNumber: String
   img: String!
-  # address: inputAddress
   email: String!
   gender: String
 }
@@ -186,7 +168,6 @@ type UserThirdServices {
   age: Int
   phoneNumber: String
   img: String
-  # address: Address
   country: String
   city: String
   district: String
@@ -241,7 +222,6 @@ type User {
   lastName: String
   age: Int
   img: String
-  # address: Address
   country: String
   city: String
   district: String
@@ -259,7 +239,6 @@ input inputSignUpUser {
   nickName: String
   lastName: String
   age: Int
-  # address: inputAddress
   country: String
   city: String
   district: String
@@ -289,111 +268,20 @@ input inputUserUpdate {
   sendEmail: Boolean
 }
 
-input inputAddress {
-  country: String
-  city: String
-  district: String
-  addressHome: String
-  reference: String
-}
-type Address {
-  country: String
-  city: String
-  district: String
-  addressHome: String
-  reference: String
-}
-
-input inputCreateShoes {
+input inputCreateProducts {
   brand: String!
   model: String!
   description: String!
   price: Int!
   stock: Int!
   gender: String!
+  material: String!
   type: String!
-  material: String!
+  typeProduct: String!
   size: [String!]!
-  product: String!
-  # imgs
-}
-input inputUpdateShoes {
-  brand: String
-  model: String
-  description: String
-  price: Int
-  stock: Int
-  gender: String
-  type: String
-  material: String
-  size: [String]
-}
-type Shoes {
-  _id: ID!
-  brand: String!
-  model: String!
-  description: String!
-  price: Int!
-  stock: Int!
-  gender: String!
-  type: String! #zapatilas zapato
-  material: String!
   imgs: [String!]!
-  size: [String!]!
-  product: String!
 }
-
-input inputCreateTshirt {
-  brand: String!
-  model: String!
-  description: String!
-  price: Int!
-  stock: Int!
-  gender: String!
-  type: String!
-  material: String!
-  size: [String!]!
-  product: String!
-}
-input inputUpdateTshirt {
-  brand: String
-  model: String
-  description: String
-  price: Int
-  stock: Int
-  gender: String
-  type: String
-  material: String
-  size: [String]
-}
-type Tshirt {
-  _id: ID!
-  brand: String!
-  model: String!
-  description: String!
-  price: Int!
-  stock: Int!
-  gender: String!
-  material: String!
-  type: String!
-  imgs: [String!]!
-  size: [String!]!
-  product: String!
-}
-
-input inputCreatePants {
-  brand: String!
-  model: String!
-  description: String!
-  price: Int!
-  stock: Int!
-  gender: String!
-  material: String!
-  type: String! #invierno vrano
-  size: [String!]!
-  product: String!
-}
-input inputUpdatePants {
+input inputUpdateProducts {
   brand: String
   model: String
   description: String
@@ -403,8 +291,9 @@ input inputUpdatePants {
   material: String
   type: String
   size: [String]
+  imgs: [String]
 }
-type Pants {
+type Products {
   _id: ID!
   brand: String!
   model: String!
@@ -414,45 +303,7 @@ type Pants {
   gender: String!
   material: String!
   type: String! #invierno vrano
+  typeProduct: String!
+  size: [String!]!
   imgs: [String!]!
-  size: [String!]!
-  product: String!
-}
-
-input inputCreateHats {
-  brand: String!
-  model: String!
-  description: String!
-  price: Int!
-  stock: Int!
-  gender: String!
-  material: String!
-  type: String!
-  size: [String!]!
-  product: String!
-}
-input inputUpdateHats {
-  brand: String
-  model: String
-  description: String
-  price: Int
-  stock: Int
-  gender: String
-  material: String
-  type: String
-  size: [String]
-}
-type Hats {
-  _id: ID!
-  brand: String!
-  model: String!
-  description: String!
-  price: Int!
-  stock: Int!
-  gender: String!
-  material: String!
-  type: String! #invierno vrano
-  imgs: [String!]!
-  size: [String!]!
-  product: String!
 }

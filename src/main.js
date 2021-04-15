@@ -9,20 +9,14 @@ dotenv.config()
 import UserDB from './models/UserDB'
 import AdminDB from './models/AdminDB'
 import UserThirdServices from './models/UserThirdServices'
-import Shoe from './models/Shoe'
-import Tshirt from './models/Tshirt'
-import Pant from './models/Pant'
-import Hat from './models/Hat'
+import Products from './models/Product'
 import { Stripe } from 'stripe'
 
 const stripe = new Stripe(process.env.STRIPE)
 const pubsub = new PubSub()
 const resolvers = { Query, Mutation, Subscription }
 const context = {
-  Shoe,
-  Tshirt,
-  Pant,
-  Hat,
+  Products,
   stripe,
   UserDB,
   AdminDB,

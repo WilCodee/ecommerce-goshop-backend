@@ -14,7 +14,6 @@
     "start": "npm run prod"
   },
   "dependencies": {
-    "bcrypt": "^5.0.1",
     "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",
     "email-verifier-node": "^0.0.2",
@@ -23,7 +22,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "5.11.15",
     "shortid": "^2.2.16",
-    "stripe": "^8.137.0"
+    "stripe": "^8.137.0",
+    "bcrypt": "^5.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.0",

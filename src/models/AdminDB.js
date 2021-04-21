@@ -36,6 +36,7 @@ const adminSchema = new Schema(
     gender: {
       type: String,
     },
+    banner: [],
     sales: [],
     products: {
       type: Number,

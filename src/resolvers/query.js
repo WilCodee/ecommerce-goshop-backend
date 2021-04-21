@@ -17,7 +17,8 @@ const Query = {
 
   product: async (_, { _id, typeProduct, limit }, { Products }) => {
     if (_id) return await Products.find({ _id })
-    const result = await Products.find({ typeProduct }).limit(limit)
+    if (typeProduct) return await Products.find({ typeProduct }).limit(limit)
+    const result = Products.find({}).limit(limit)
     return result
   },
 }

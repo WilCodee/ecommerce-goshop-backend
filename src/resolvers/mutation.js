@@ -21,13 +21,24 @@ const Mutation = {
       token: genToken(newUser._id),
     }
   },
-  loginUser: async (_, { email, password }, { UserDB }) => {
-    await validateEmail(email)
+  loginUser: async (_, { email, password }, { UserDB, AdminDB }) => {
+    // await validateEmail(email)
     const userExist = await UserDB.findOne({ email })
-    if (!userExist) throw new Error('Usuario no existe')
-    const pass = comparePassword(password, userExist.password)
-    if (!pass) throw new Error('Contraseña incorrecta')
-    return { user: userExist, token: genToken(userExist._id) }
+    if (!userExist) {
+      // throw new Error('Usuario no existe')
+      const adminExist = await AdminDB.findOne({ email })
+      if (!adminExist) {
+        throw new Error('Usuario no existe')
+      } else {
+        const pass = comparePassword(password, adminExist.password)
+        if (!pass) throw new Error('Contraseña incorrecta ad')
+        return { admin: adminExist, token: genToken(adminExist._id) }
+      }
+    } else {
+      const pass = comparePassword(password, userExist.password)
+      if (!pass) throw new Error('Contraseña incorrecta')
+      return { user: userExist, token: genToken(userExist._id) }
+    }
   },
   userUpdate: async (_, { _id, data }, { UserDB }) => {
     const userExist = UserDB.findById(_id)
@@ -226,56 +237,21 @@ const Mutation = {
     }
   },
 
-  singleUpload: async (
-    _,
-    { file, _id, typeProduct },
-    { Shoe, Pant, Tshirt, Hat }
-  ) => {
+  singleUpload: async (_, { file, _id }, { Products }) => {
     const { createReadStream, filename } = await file
     const stream = createReadStream()
     const serverFilename = `${shortId.generate()}-${filename}`
     const pathName = path.join(__dirname, `../public/images/${serverFilename}`)
     await stream.pipe(createWriteStream(pathName))
 
-    switch (typeProduct) {
-      case 'Shoes':
-        const productExistShoes = await Shoe.findById(_id)
-        if (!productExistShoes) throw new Error('El producto no existe')
-        await Shoe.findByIdAndUpdate(_id, {
-          $push: { imgs: `http://localhost:5000/${serverFilename}` },
-        })
-        break
-
-      case 'Pants':
-        const productExistPants = await Pant.findById(_id)
-        if (!productExistPants) throw new Error('El producto no existe')
-        await Pant.findByIdAndUpdate(_id, {
-          $push: { imgs: `http://localhost:5000/${serverFilename}` },
-        })
-        break
-      case 'Tshirt':
-        const productExistTshirt = await Tshirt.findById(_id)
-        if (!productExistTshirt) throw new Error('El producto no existe')
-        await Tshirt.findByIdAndUpdate(_id, {
-          $push: { imgs: `http://localhost:5000/${serverFilename}` },
-        })
-        break
-      case 'Hats':
-        const productExistHats = await Hat.findById(_id)
-        if (!productExistHats) throw new Error('El producto no existe')
-        await Hat.findByIdAndUpdate(_id, {
-          $push: { imgs: `http://localhost:5000/${serverFilename}` },
-        })
-        break
-    }
-
+    const productExist = await Products.findById(_id)
+    if (!productExist) throw new Error('El producto no existe')
+    await Products.findByIdAndUpdate(_id, {
+      $push: { imgs: `http://localhost:5000/${serverFilename}` },
+    })
     return { path: `http://localhost:5000/${serverFilename}` }
   },
-  deleteImgUploaded: async (
-    _,
-    { pathImg, typeProduct, productId },
-    { Shoe, Pant, Tshirt, Hat }
-  ) => {
+  deleteImgUploaded: async (_, { pathImg, productId }, { Products }) => {
     try {
       const serverPath = pathImg.replace('http://localhost:5000/', '')
       const fileToDelete = path.join(
@@ -285,30 +261,11 @@ const Mutation = {
       if (existsSync(fileToDelete)) {
         unlinkSync(fileToDelete)
       } else return false
-      switch (typeProduct) {
-        case 'Shoes':
-          const shoesExists = await Shoe.findById(productId)
-          if (!shoesExists) throw new Error('El product no existe')
-          await Shoe.findByIdAndUpdate(productId, { $pull: { imgs: pathImg } })
-          return true
-        case 'Pants':
-          const pantsExists = await Pant.findById(productId)
-          if (!pantsExists) throw new Error('El product no existe')
-          await Pant.findByIdAndUpdate(productId, { $pull: { imgs: pathImg } })
-          return true
-        case 'Tshirt':
-          const tshirtExists = await Tshirt.findById(productId)
-          if (!tshirtExists) throw new Error('El product no existe')
-          await Tshirt.findByIdAndUpdate(productId, {
-            $pull: { imgs: pathImg },
-          })
-          return true
-        case 'Hats':
-          const hatsExists = await Hat.findById(productId)
-          if (!hatsExists) throw new Error('El product no existe')
-          await Hat.findByIdAndUpdate(productId, { $pull: { imgs: pathImg } })
-          return true
-      }
+
+      const productExists = await Products.findById(productId)
+      if (!productExists) throw new Error('El producto no existe')
+      await Products.findByIdAndUpdate(productId, { $pull: { imgs: pathImg } })
+      return true
     } catch (error) {
       return false
     }
@@ -334,6 +291,44 @@ const Mutation = {
     if (!productExist) throw new Error('El producto no existe')
     const result = await Products.findByIdAndDelete(_id)
     return result
+  },
+
+  uploadBanner: async (_, { file, _id, href }, { AdminDB }) => {
+    const { createReadStream, filename } = await file
+    const stream = createReadStream()
+    const serverFilename = `${shortId.generate()}-${filename}`
+    const pathName = path.join(__dirname, `../public/images/${serverFilename}`)
+    await stream.pipe(createWriteStream(pathName))
+
+    const adminExist = await AdminDB.findById(_id)
+    if (!adminExist) throw new Error('Admin no existe')
+    await AdminDB.findByIdAndUpdate(_id, {
+      $push: {
+        banner: { href, path: `http://localhost:5000/${serverFilename}` },
+      },
+    })
+    return { path: `http://localhost:5000/${serverFilename}` }
+  },
+  deleteBanner: async (_, { pathImg, _id }, { AdminDB }) => {
+    try {
+      const serverPath = pathImg.replace('http://localhost:5000/', '')
+      const fileToDelete = path.join(
+        __dirname,
+        `../public/images/${serverPath}`
+      )
+      if (existsSync(fileToDelete)) {
+        unlinkSync(fileToDelete)
+      } else throw 'La imagen no existe'
+
+      const adminExists = await AdminDB.findById(_id)
+      if (!adminExists) throw 'Admin no existe'
+      await AdminDB.findByIdAndUpdate(_id, {
+        $pull: { banner: { path: pathImg } },
+      })
+      return true
+    } catch (error) {
+      throw new Error(error)
+    }
   },
 }
 

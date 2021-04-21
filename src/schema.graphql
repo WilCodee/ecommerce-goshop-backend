@@ -32,16 +32,15 @@ type Mutation {
 
   adminSalesInc(data: inputSales!): Boolean!
 
-  singleUpload(file: Upload!, _id: ID, typeProduct: String!): File!
-  deleteImgUploaded(
-    pathImg: String!
-    typeProduct: String!
-    productId: ID!
-  ): Boolean!
+  singleUpload(file: Upload!, _id: ID): File!
+  deleteImgUploaded(pathImg: String!, productId: ID!): Boolean!
 
   createProduct(data: inputCreateProducts!): Products!
   updateProduct(_id: ID!, data: inputUpdateProducts!): Products!
   deleteProduct(_id: ID!): Products!
+
+  uploadBanner(file: Upload!, _id: ID!, href: String!): File!
+  deleteBanner(pathImg: String!, _id: ID!): Boolean!
 }
 
 type Subscription {
@@ -50,8 +49,13 @@ type Subscription {
 
 scalar Upload
 
+input inputFile {
+  path: String!
+  href: String
+}
 type File {
   path: String!
+  href: String
 }
 
 type sellSubscriptionPayload {
@@ -103,7 +107,7 @@ input inputCart {
   brand: String!
   model: String!
   description: String!
-  productType: String!
+  typeProduct: String!
   productId: ID!
 }
 type Cart {
@@ -112,7 +116,7 @@ type Cart {
   brand: String!
   model: String!
   description: String!
-  productType: String!
+  typeProduct: String!
   productId: ID!
 }
 
@@ -199,6 +203,7 @@ input inputAdminUpdate {
   age: Int
   phoneNumber: String
   gender: String
+  banner: [inputFile!]
 }
 type Admin {
   _id: ID!
@@ -213,6 +218,7 @@ type Admin {
   gender: String
   sales: [Sales]
   products: Int
+  banner: [File!]
 }
 
 type User {
@@ -279,7 +285,7 @@ input inputCreateProducts {
   type: String!
   typeProduct: String!
   size: [String!]!
-  imgs: [String!]!
+  # imgs: [String!]!
 }
 input inputUpdateProducts {
   brand: String
@@ -291,7 +297,7 @@ input inputUpdateProducts {
   material: String
   type: String
   size: [String]
-  imgs: [String]
+  # imgs: [String]
 }
 type Products {
   _id: ID!

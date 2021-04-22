@@ -41,6 +41,9 @@ type Mutation {
 
   uploadBanner(file: Upload!, _id: ID!, href: String!): File!
   deleteBanner(pathImg: String!, _id: ID!): Boolean!
+
+  connectWa: Boolean!
+  sendMsgWa(msg: String!): Boolean!
 }
 
 type Subscription {

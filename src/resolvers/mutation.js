@@ -3,6 +3,8 @@ import {
   hastPassword,
   comparePassword,
   validateEmail,
+  connectWa,
+  sendMsgWa,
 } from '../utils/index'
 import path from 'path'
 import { createWriteStream, existsSync, unlinkSync } from 'fs'
@@ -328,6 +330,23 @@ const Mutation = {
       return true
     } catch (error) {
       throw new Error(error)
+    }
+  },
+
+  connectWa: async () => {
+    try {
+      await connectWa()
+      return true
+    } catch (error) {
+      throw error
+    }
+  },
+  sendMsgWa: async (_, { msg }) => {
+    try {
+      await sendMsgWa(msg)
+      return true
+    } catch (error) {
+      throw error
     }
   },
 }

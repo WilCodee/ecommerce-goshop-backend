@@ -39,11 +39,11 @@ type Mutation {
   updateProduct(_id: ID!, data: inputUpdateProducts!): Products!
   deleteProduct(_id: ID!): Products!
 
-  uploadBanner(file: Upload!, _id: ID!, href: String!): File!
-  deleteBanner(pathImg: String!, _id: ID!): Boolean!
-
   connectWa: Boolean!
   sendMsgWa(msg: String!): Boolean!
+
+  uploadBanner(pubId: String!, path: String!, href: String!, _id: ID!): String!
+  deleteBanner(path: String!, _id: ID!): String
 }
 
 type Subscription {

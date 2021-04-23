@@ -11,6 +11,13 @@ import AdminDB from './models/AdminDB'
 import UserThirdServices from './models/UserThirdServices'
 import Products from './models/Product'
 import { Stripe } from 'stripe'
+import Cloudinary from 'cloudinary'
+
+Cloudinary.config({
+  cloud_name: 'dphhkpiyp',
+  api_key: '749396252758529',
+  api_secret: 'zD4V9JO-PCvE0kXijRkxOMADq9M',
+})
 
 const stripe = new Stripe(process.env.STRIPE)
 const pubsub = new PubSub()
@@ -22,6 +29,7 @@ const context = {
   AdminDB,
   UserThirdServices,
   pubsub,
+  Cloudinary,
 }
 
 const server = new GraphQLServer({

@@ -15,7 +15,8 @@
   },
   "dependencies": {
     "baileys": "^1.1.1",
-    "bcrypt": "^5.0.1",
+    "bcrypt": "3.0.6",
+    "cloudinary": "^1.25.1",
     "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",
     "email-verifier-node": "^0.0.2",

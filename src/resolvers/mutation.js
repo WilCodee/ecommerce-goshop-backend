@@ -9,6 +9,8 @@ import {
 import path from 'path'
 import { createWriteStream, existsSync, unlinkSync } from 'fs'
 import shortId from 'shortid'
+import dotenv from 'dotenv'
+dotenv.config()
 
 const Mutation = {
   signUpUser: async (_, { data }, { UserDB }) => {
@@ -249,13 +251,13 @@ const Mutation = {
     const productExist = await Products.findById(_id)
     if (!productExist) throw new Error('El producto no existe')
     await Products.findByIdAndUpdate(_id, {
-      $push: { imgs: `http://localhost:5000/${serverFilename}` },
+      $push: { imgs: `${process.env.URI}/${serverFilename}` },
     })
-    return { path: `http://localhost:5000/${serverFilename}` }
+    return { path: `${process.env.URI}/${serverFilename}` }
   },
   deleteImgUploaded: async (_, { pathImg, productId }, { Products }) => {
     try {
-      const serverPath = pathImg.replace('http://localhost:5000/', '')
+      const serverPath = pathImg.replace(`${process.env.URI}/`, '')
       const fileToDelete = path.join(
         __dirname,
         `../public/images/${serverPath}`
@@ -295,44 +297,6 @@ const Mutation = {
     return result
   },
 
-  uploadBanner: async (_, { file, _id, href }, { AdminDB }) => {
-    const { createReadStream, filename } = await file
-    const stream = createReadStream()
-    const serverFilename = `${shortId.generate()}-${filename}`
-    const pathName = path.join(__dirname, `../public/images/${serverFilename}`)
-    await stream.pipe(createWriteStream(pathName))
-
-    const adminExist = await AdminDB.findById(_id)
-    if (!adminExist) throw new Error('Admin no existe')
-    await AdminDB.findByIdAndUpdate(_id, {
-      $push: {
-        banner: { href, path: `http://localhost:5000/${serverFilename}` },
-      },
-    })
-    return { path: `http://localhost:5000/${serverFilename}` }
-  },
-  deleteBanner: async (_, { pathImg, _id }, { AdminDB }) => {
-    try {
-      const serverPath = pathImg.replace('http://localhost:5000/', '')
-      const fileToDelete = path.join(
-        __dirname,
-        `../public/images/${serverPath}`
-      )
-      if (existsSync(fileToDelete)) {
-        unlinkSync(fileToDelete)
-      } else throw 'La imagen no existe'
-
-      const adminExists = await AdminDB.findById(_id)
-      if (!adminExists) throw 'Admin no existe'
-      await AdminDB.findByIdAndUpdate(_id, {
-        $pull: { banner: { path: pathImg } },
-      })
-      return true
-    } catch (error) {
-      throw new Error(error)
-    }
-  },
-
   connectWa: async () => {
     try {
       await connectWa()
@@ -347,6 +311,45 @@ const Mutation = {
       return true
     } catch (error) {
       throw error
+    }
+  },
+
+  subir: async (_, { pubId, path, href, _id }, { AdminDB }) => {
+    try {
+      const adminExist = await AdminDB.findById(_id)
+      if (!adminExist) throw 'Admin no existe'
+      const result = await AdminDB.findByIdAndUpdate(_id, {
+        $push: {
+          banner: { href, path, pubId },
+        },
+      })
+      if (!result) throw 'fallo al agregar path/imagen al la base de datos'
+      return 'agregado'
+    } catch (error) {
+      throw new Error(error)
+    }
+  },
+  pru: async (_, { path, _id }, { Cloudinary, AdminDB }) => {
+    try {
+      const adminExist = await AdminDB.findById(_id)
+      if (!adminExist) throw 'Admin no existe'
+
+      await AdminDB.findByIdAndUpdate(_id, {
+        $pull: {
+          banner: { path },
+        },
+      })
+
+      //saco el resto del publicID para eliminarlo
+      const pathArr = path.split('/').slice(-1)[0].split('.')[0]
+
+      const result = await Cloudinary.v2.uploader.destroy(
+        `${process.env.CLOUDINARINAME}/${pathArr}`
+      )
+      if (!result) throw 'fallo al eliminar la imagen del servidor'
+      return 'eliminado'
+    } catch (error) {
+      throw new Error(error)
     }
   },
 }

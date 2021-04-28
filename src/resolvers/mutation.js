@@ -6,9 +6,6 @@ import {
   connectWa,
   sendMsgWa,
 } from '../utils/index'
-import path from 'path'
-import { createWriteStream, existsSync, unlinkSync } from 'fs'
-import shortId from 'shortid'
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -108,40 +105,16 @@ const Mutation = {
     return result
   },
 
-  stripe: async (_, { data }, { stripe, pubsub }) => {
+  stripe: async (_, { data }, { stripe }) => {
     try {
-      const {
-        id,
-        amount,
-        name,
-        imgUser,
-        phoneNumber,
-        email,
-        brand,
-        model,
-        price,
-        imgProduct,
-      } = data
+      const { id, amount } = data
       const payment = await stripe.paymentIntents.create({
         amount,
         currency: 'usd',
         payment_method: id,
         confirm: true,
       })
-      pubsub.publish('sells', {
-        sells: {
-          name,
-          imgUser,
-          phoneNumber,
-          email,
-          brand,
-          model,
-          price,
-          imgProduct,
-        },
-      })
     } catch (err) {
-      console.log(err)
       return false
     } finally {
       return true
@@ -366,8 +339,8 @@ const Mutation = {
             )
           }
         })
-        console.log('primera')
-        return 'actualizado1'
+        // primera
+        return 'actualizado'
       } else if (href && !path && pubId && _id) {
         const file = await AdminDB.find({ _id }, { banner: 1 })
 
@@ -382,10 +355,10 @@ const Mutation = {
             })
           }
         })
-        console.log('segunda2')
-        return 'actualizado2'
+        // segunda
+        return 'actualizado'
       } else {
-        console.log('nose')
+        return
       }
     } catch (error) {
       throw new Error(error)

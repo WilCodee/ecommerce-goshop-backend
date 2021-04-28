@@ -54,7 +54,6 @@ export const connectWa = async () => {
     await client.connect()
     return true
   } catch (error) {
-    console.log(error)
     throw new Error('fail to send message', error)
   }
 }

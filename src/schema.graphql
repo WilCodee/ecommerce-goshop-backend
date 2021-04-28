@@ -53,12 +53,6 @@ type Mutation {
   deleteBanner(path: String!, _id: ID!): String
 }
 
-type Subscription {
-  sells: sellSubscriptionPayload!
-}
-
-scalar Upload
-
 input inputFile {
   path: String!
   href: String
@@ -70,40 +64,13 @@ type File {
   pubId: String!
 }
 
-type sellSubscriptionPayload {
-  name: String
-  imgUser: String
-  phoneNumber: String
-  email: String
-  brand: String
-  model: String
-  price: Int
-  imgProduct: String
-}
-
 input inputStripe {
   id: ID!
   amount: Int!
-  name: String
-  imgUser: String
-  phoneNumber: String
-  email: String
-  brand: String
-  model: String
-  price: Int
-  imgProduct: String
 }
 type Stripe {
   id: ID!
   amount: Int!
-  name: String
-  imgUser: String
-  phoneNumber: String
-  email: String
-  brand: String
-  model: String
-  price: Int
-  imgProduct: String
 }
 
 type AuthPayload {

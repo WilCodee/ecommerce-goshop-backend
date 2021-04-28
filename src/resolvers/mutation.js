@@ -241,37 +241,41 @@ const Mutation = {
     }
   },
 
-  singleUpload: async (_, { file, _id }, { Products }) => {
-    const { createReadStream, filename } = await file
-    const stream = createReadStream()
-    const serverFilename = `${shortId.generate()}-${filename}`
-    const pathName = path.join(__dirname, `../public/images/${serverFilename}`)
-    await stream.pipe(createWriteStream(pathName))
-
-    const productExist = await Products.findById(_id)
-    if (!productExist) throw new Error('El producto no existe')
-    await Products.findByIdAndUpdate(_id, {
-      $push: { imgs: `${process.env.URI}/${serverFilename}` },
-    })
-    return { path: `${process.env.URI}/${serverFilename}` }
-  },
-  deleteImgUploaded: async (_, { pathImg, productId }, { Products }) => {
+  singleUpload: async (_, { pubId, pathImg, _id }, { Products }) => {
     try {
-      const serverPath = pathImg.replace(`${process.env.URI}/`, '')
-      const fileToDelete = path.join(
-        __dirname,
-        `../public/images/${serverPath}`
-      )
-      if (existsSync(fileToDelete)) {
-        unlinkSync(fileToDelete)
-      } else return false
-
-      const productExists = await Products.findById(productId)
-      if (!productExists) throw new Error('El producto no existe')
-      await Products.findByIdAndUpdate(productId, { $pull: { imgs: pathImg } })
-      return true
+      const productExist = await Products.findById(_id)
+      if (!productExist) throw 'El producto no existe'
+      await Products.findByIdAndUpdate(_id, {
+        $push: { imgs: { pathImg, pubId } },
+      })
+      return 'subido'
     } catch (error) {
-      return false
+      throw new Error(error)
+    }
+  },
+  deleteImgUploaded: async (
+    _,
+    { pathImg, productId },
+    { Products, Cloudinary }
+  ) => {
+    try {
+      const productExists = await Products.findById(productId)
+      if (!productExists) throw 'El producto no existe'
+      await Products.findByIdAndUpdate(productId, {
+        $pull: { imgs: { pathImg } },
+      })
+
+      //saco el resto del publicID para eliminarlo
+      const pathArr = pathImg.split('/').slice(-1)[0].split('.')[0]
+
+      const result = await Cloudinary.v2.uploader.destroy(
+        `${process.env.CLOUDINARINAME}/${pathArr}`
+      )
+      if (!result) throw 'fallo al eliminar la imagen del servidor'
+
+      return 'eliminado'
+    } catch (error) {
+      throw new Error(error)
     }
   },
 
@@ -314,7 +318,7 @@ const Mutation = {
     }
   },
 
-  subir: async (_, { pubId, path, href, _id }, { AdminDB }) => {
+  uploadBanner: async (_, { pubId, path, href, _id }, { AdminDB }) => {
     try {
       const adminExist = await AdminDB.findById(_id)
       if (!adminExist) throw 'Admin no existe'
@@ -329,7 +333,65 @@ const Mutation = {
       throw new Error(error)
     }
   },
-  pru: async (_, { path, _id }, { Cloudinary, AdminDB }) => {
+  updateBanner: async (
+    _,
+    { path, _id, href, pubId, newPubId },
+    { Cloudinary, AdminDB }
+  ) => {
+    try {
+      const adminExist = await AdminDB.findById(_id)
+      if (!adminExist) throw 'Admin no existe'
+      if (path && !href) {
+        const file = await AdminDB.find({ _id }, { banner: 1 })
+        file[0]?.banner.map(async f => {
+          if (f.pubId === pubId) {
+            const pathArr = f.path.split('/').slice(-1)[0].split('.')[0]
+
+            await Cloudinary.v2.uploader.destroy(
+              `${process.env.CLOUDINARINAME}/${pathArr}`
+            )
+
+            await AdminDB.findByIdAndUpdate(_id, {
+              $pull: { banner: { pubId } },
+            })
+
+            await AdminDB.findByIdAndUpdate(
+              _id,
+              {
+                $push: {
+                  banner: { href: f.href, path, pubId: newPubId },
+                },
+              },
+              { new: true }
+            )
+          }
+        })
+        console.log('primera')
+        return 'actualizado1'
+      } else if (href && !path && pubId && _id) {
+        const file = await AdminDB.find({ _id }, { banner: 1 })
+
+        file[0].banner.map(async f => {
+          if (f.pubId === pubId) {
+            await AdminDB.findByIdAndUpdate(_id, {
+              $pull: { banner: { pubId } },
+            })
+
+            await AdminDB.findByIdAndUpdate(_id, {
+              $push: { banner: { href, path: f.path, pubId: f.pubId } },
+            })
+          }
+        })
+        console.log('segunda2')
+        return 'actualizado2'
+      } else {
+        console.log('nose')
+      }
+    } catch (error) {
+      throw new Error(error)
+    }
+  },
+  deleteBanner: async (_, { path, _id }, { Cloudinary, AdminDB }) => {
     try {
       const adminExist = await AdminDB.findById(_id)
       if (!adminExist) throw 'Admin no existe'

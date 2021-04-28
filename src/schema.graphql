@@ -32,8 +32,8 @@ type Mutation {
 
   adminSalesInc(data: inputSales!): Boolean!
 
-  singleUpload(file: Upload!, _id: ID): File!
-  deleteImgUploaded(pathImg: String!, productId: ID!): Boolean!
+  singleUpload(pubId: String!, pathImg: String!, _id: ID): String!
+  deleteImgUploaded(pathImg: String!, productId: ID!): String!
 
   createProduct(data: inputCreateProducts!): Products!
   updateProduct(_id: ID!, data: inputUpdateProducts!): Products!
@@ -42,7 +42,14 @@ type Mutation {
   connectWa: Boolean!
   sendMsgWa(msg: String!): Boolean!
 
-  uploadBanner(pubId: String!, path: String!, href: String!, _id: ID!): String!
+  uploadBanner(pubId: String, path: String, href: String, _id: ID!): String!
+  updateBanner(
+    path: String
+    _id: ID!
+    href: String
+    pubId: String
+    newPubId: String
+  ): String
   deleteBanner(path: String!, _id: ID!): String
 }
 
@@ -55,10 +62,12 @@ scalar Upload
 input inputFile {
   path: String!
   href: String
+  pubId: String!
 }
 type File {
   path: String!
   href: String
+  pubId: String!
 }
 
 type sellSubscriptionPayload {
@@ -314,5 +323,10 @@ type Products {
   type: String! #invierno vrano
   typeProduct: String!
   size: [String!]!
-  imgs: [String!]!
+  imgs: [ImgProduct!]!
+}
+
+type ImgProduct {
+  pubId: String!
+  pathImg: String!
 }

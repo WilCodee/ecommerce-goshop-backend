@@ -201,10 +201,10 @@ const Mutation = {
 
   adminSalesInc: async (_, { data }, { AdminDB }) => {
     try {
-      const adminExist = await AdminDB.findById('60566943bfe0434ed4cf4c01')
+      const adminExist = await AdminDB.findById(process.env.ADMIN_ID)
       if (!adminExist) throw new Error('El Administrador no existe')
       await AdminDB.findByIdAndUpdate(
-        '60566943bfe0434ed4cf4c01',
+        process.env.ADMIN_ID,
         { $push: { sales: { ...data } } },
         { new: true }
       )

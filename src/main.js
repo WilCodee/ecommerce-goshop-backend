@@ -11,9 +11,9 @@ import { Stripe } from 'stripe'
 import Cloudinary from 'cloudinary'
 
 Cloudinary.config({
-  cloud_name: 'dphhkpiyp',
-  api_key: '749396252758529',
-  api_secret: 'zD4V9JO-PCvE0kXijRkxOMADq9M',
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
 })
 
 const stripe = new Stripe(process.env.STRIPE)

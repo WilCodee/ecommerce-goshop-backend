@@ -267,10 +267,18 @@ const Mutation = {
     )
     return result
   },
-  deleteProduct: async (_, { _id }, { Products }) => {
+  deleteProduct: async (_, { _id, imgs }, { Products, Cloudinary }) => {
     const productExist = await Products.findById(_id)
     if (!productExist) throw new Error('El producto no existe')
     const result = await Products.findByIdAndDelete(_id)
+
+    imgs.map(async i => {
+      const pathArr = i.split('/').slice(-1)[0].split('.')[0]
+      await Cloudinary.v2.uploader.destroy(
+        `${process.env.CLOUDINARINAME}/${pathArr}`
+      )
+    })
+
     return result
   },
 

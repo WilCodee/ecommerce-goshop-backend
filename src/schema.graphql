@@ -37,7 +37,7 @@ type Mutation {
 
   createProduct(data: inputCreateProducts!): Products!
   updateProduct(_id: ID!, data: inputUpdateProducts!): Products!
-  deleteProduct(_id: ID!): Products!
+  deleteProduct(_id: ID!, imgs: [String!]): Products!
 
   connectWa: Boolean!
   sendMsgWa(msg: String!): Boolean!

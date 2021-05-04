@@ -395,6 +395,20 @@ const Mutation = {
       throw new Error(error)
     }
   },
+  productStockDec: async (_, { _id }, { Products }) => {
+    try {
+      const productExists = await Products.findById(_id)
+      if (!productExists) throw 'El producto no existe'
+      await Products.findByIdAndUpdate(
+        _id,
+        { $inc: { stock: -1 } },
+        { new: true }
+      )
+      return 'actualizado'
+    } catch (error) {
+      throw new Error(error)
+    }
+  },
 }
 
 export default Mutation

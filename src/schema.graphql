@@ -52,6 +52,7 @@ type Mutation {
   ): String
   deleteBanner(path: String!, _id: ID!): String
   productStockDec(_id: ID!): String!
+  sendMsgTelegram(message: String!): Boolean!
 }
 
 input inputFile {

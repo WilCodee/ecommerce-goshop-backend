@@ -409,6 +409,14 @@ const Mutation = {
       throw new Error(error)
     }
   },
+  sendMsgTelegram: async (_, { message }, { telegram }) => {
+    try {
+      await telegram.sendMessage(process.env.CHAT_ID_TELEGRAM, message)
+      return true
+    } catch (error) {
+      console.log(error)
+    }
+  },
 }
 
 export default Mutation

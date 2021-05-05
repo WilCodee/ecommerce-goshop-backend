@@ -9,7 +9,9 @@ import UserThirdServices from './models/UserThirdServices'
 import Products from './models/Product'
 import { Stripe } from 'stripe'
 import Cloudinary from 'cloudinary'
+import Telegram from 'telegraf/telegram'
 
+const telegram = new Telegram(process.env.TOKEN_TELEGRAM)
 Cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.API_KEY,
@@ -25,6 +27,7 @@ const context = {
   AdminDB,
   UserThirdServices,
   Cloudinary,
+  telegram,
 }
 
 const server = new GraphQLServer({

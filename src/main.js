@@ -7,7 +7,6 @@ import UserDB from './models/UserDB'
 import AdminDB from './models/AdminDB'
 import UserThirdServices from './models/UserThirdServices'
 import Products from './models/Product'
-import { Stripe } from 'stripe'
 import Cloudinary from 'cloudinary'
 import Telegram from 'telegraf/telegram'
 
@@ -18,11 +17,9 @@ Cloudinary.config({
   api_secret: process.env.API_SECRET,
 })
 
-const stripe = new Stripe(process.env.STRIPE)
 const resolvers = { Query, Mutation }
 const context = {
   Products,
-  stripe,
   UserDB,
   AdminDB,
   UserThirdServices,
@@ -39,6 +36,12 @@ const server = new GraphQLServer({
 })
 
 const opts = {
+  cors: {
+    origin: ['https://e-commerce-github.vercel.app', 'http://localhost:3000'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  },
   port: process.env.PORT,
   playground: '/gql',
 }

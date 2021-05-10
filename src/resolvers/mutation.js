@@ -3,8 +3,6 @@ import {
   hastPassword,
   comparePassword,
   validateEmail,
-  connectWa,
-  sendMsgWa,
 } from '../utils/index'
 import dotenv from 'dotenv'
 dotenv.config()
@@ -12,7 +10,7 @@ dotenv.config()
 const Mutation = {
   signUpUser: async (_, { data }, { UserDB }) => {
     const { email, password } = data
-    // await validateEmail(email)
+    await validateEmail(email)
     const emailTaken = await UserDB.findOne({ email })
     if (emailTaken) throw new Error('Este Correo ya existe')
     const newPass = hastPassword(password)
@@ -23,10 +21,10 @@ const Mutation = {
     }
   },
   loginUser: async (_, { email, password }, { UserDB, AdminDB }) => {
-    // await validateEmail(email)
+    //registro de admin y user
+    await validateEmail(email)
     const userExist = await UserDB.findOne({ email })
     if (!userExist) {
-      // throw new Error('Usuario no existe')
       const adminExist = await AdminDB.findOne({ email })
       if (!adminExist) {
         throw new Error('Usuario no existe')
@@ -64,14 +62,6 @@ const Mutation = {
       token: genToken(newAdmin._id),
     }
   },
-  loginAdmin: async (_, { email, password }, { AdminDB }) => {
-    // await validateEmail(email)
-    const adminExist = await AdminDB.findOne({ email })
-    if (!adminExist) throw new Error('Admin no encontrado')
-    const pass = comparePassword(password, adminExist.password)
-    if (!pass) throw new Error('Contraseña incorrecta')
-    return { admin: adminExist, token: genToken(adminExist._id) }
-  },
   adminUpdate: async (_, { _id, data }, { AdminDB }) => {
     const adminExist = AdminDB.findById(_id)
     if (!adminExist) throw new Error('Administrador no existe')
@@ -103,22 +93,6 @@ const Mutation = {
       { new: true }
     )
     return result
-  },
-
-  stripe: async (_, { data }, { stripe }) => {
-    try {
-      const { id, amount } = data
-      const payment = await stripe.paymentIntents.create({
-        amount,
-        currency: 'usd',
-        payment_method: id,
-        confirm: true,
-      })
-    } catch (err) {
-      return false
-    } finally {
-      return true
-    }
   },
 
   userCartInc: async (_, { _id, data }, { UserDB }) => {
@@ -280,23 +254,6 @@ const Mutation = {
     })
 
     return result
-  },
-
-  connectWa: async () => {
-    try {
-      await connectWa()
-      return true
-    } catch (error) {
-      throw error
-    }
-  },
-  sendMsgWa: async (_, { msg }) => {
-    try {
-      await sendMsgWa(msg)
-      return true
-    } catch (error) {
-      throw error
-    }
   },
 
   uploadBanner: async (_, { pubId, path, href, _id }, { AdminDB }) => {

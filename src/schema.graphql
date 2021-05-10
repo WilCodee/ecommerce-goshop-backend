@@ -20,8 +20,6 @@ type Mutation {
     data: inputThirdServicesUpdate
   ): UserThirdServices!
 
-  stripe(data: inputStripe): Boolean!
-
   userCartInc(_id: ID!, data: inputCart!): Boolean!
   userCartDec(_id: ID!, productId: ID!): Boolean!
   userShoppingInc(_id: ID!, data: inputShopping!): Shopping!
@@ -64,15 +62,6 @@ type File {
   path: String!
   href: String
   pubId: String!
-}
-
-input inputStripe {
-  id: ID!
-  amount: Int!
-}
-type Stripe {
-  id: ID!
-  amount: Int!
 }
 
 type AuthPayload {

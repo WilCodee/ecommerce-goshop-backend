@@ -37,9 +37,6 @@ type Mutation {
   updateProduct(_id: ID!, data: inputUpdateProducts!): Products!
   deleteProduct(_id: ID!, imgs: [String!]): Products!
 
-  connectWa: Boolean!
-  sendMsgWa(msg: String!): Boolean!
-
   uploadBanner(pubId: String, path: String, href: String, _id: ID!): String!
   updateBanner(
     path: String
@@ -248,7 +245,7 @@ input inputCreateProducts {
   brand: String!
   model: String!
   description: String!
-  price: Int!
+  price: String!
   stock: Int!
   gender: String!
   material: String!
@@ -261,7 +258,7 @@ input inputUpdateProducts {
   brand: String
   model: String
   description: String
-  price: Int
+  price: String
   stock: Int
   gender: String
   material: String
@@ -274,7 +271,7 @@ type Products {
   brand: String!
   model: String!
   description: String!
-  price: Int!
+  price: String!
   stock: Int!
   gender: String!
   material: String!

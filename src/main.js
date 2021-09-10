@@ -30,14 +30,14 @@ const context = {
 const server = new GraphQLServer({
   typeDefs: './dist/schema.graphql',
   resolvers,
-  context: request => {
+  context: (request) => {
     return { ...request, ...context }
   },
 })
 
 const opts = {
   cors: {
-    origin: ['https://e-commerce-github.vercel.app', 'http://localhost:3000'],
+    origin: ['https://mi-tienda-online.vercel.app', 'http://localhost:3000'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     preflightContinue: false,
     optionsSuccessStatus: 204,

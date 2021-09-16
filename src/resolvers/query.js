@@ -1,5 +1,6 @@
 const Query = {
   user: async (_, { _id }, { UserDB }) => {
+    if (!_id) return await UserDB.find({})
     const data = await UserDB.findById(_id)
     if (!data) throw new Error('Usuario no existe')
     return data
@@ -10,6 +11,7 @@ const Query = {
     return data
   },
   thirdUser: async (_, { _id }, { UserThirdServices }) => {
+    if (!_id) return await UserThirdServices.find({})
     const data = await UserThirdServices.findById(_id)
     if (!data) throw new Error('Usuario no existe')
     return data

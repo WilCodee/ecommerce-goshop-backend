@@ -45,7 +45,7 @@ const Mutation = {
     const result = await UserDB.findByIdAndUpdate(
       _id,
       { ...data },
-      { new: true }
+      { new: true },
     )
     return result
   },
@@ -68,7 +68,7 @@ const Mutation = {
     const result = await AdminDB.findByIdAndUpdate(
       _id,
       { ...data },
-      { new: true }
+      { new: true },
     )
     return result
   },
@@ -90,7 +90,7 @@ const Mutation = {
     const result = await UserThirdServices.findByIdAndUpdate(
       _id,
       { ...data },
-      { new: true }
+      { new: true },
     )
     return result
   },
@@ -102,7 +102,7 @@ const Mutation = {
       await UserDB.findByIdAndUpdate(
         _id,
         { $push: { cart: { ...data } } },
-        { new: true }
+        { new: true },
       )
       return true
     } catch (error) {
@@ -127,7 +127,7 @@ const Mutation = {
     const result = await UserDB.findByIdAndUpdate(
       _id,
       { $push: { shopping: { ...data } } },
-      { new: true }
+      { new: true },
     )
     return result
   },
@@ -139,7 +139,7 @@ const Mutation = {
       await UserThirdServices.findByIdAndUpdate(
         _id,
         { $push: { cart: { ...data } } },
-        { new: true }
+        { new: true },
       )
       return true
     } catch (error) {
@@ -155,7 +155,7 @@ const Mutation = {
         {
           $pull: { cart: { productId } },
         },
-        { new: true }
+        { new: true },
       )
       return result
     } catch (error) {
@@ -168,7 +168,7 @@ const Mutation = {
     const result = await UserThirdServices.findByIdAndUpdate(
       _id,
       { $push: { shopping: { ...data } } },
-      { new: true }
+      { new: true },
     )
     return result
   },
@@ -180,7 +180,7 @@ const Mutation = {
       await AdminDB.findByIdAndUpdate(
         process.env.ADMIN_ID,
         { $push: { sales: { ...data } } },
-        { new: true }
+        { new: true },
       )
       return true
     } catch (error) {
@@ -203,7 +203,7 @@ const Mutation = {
   deleteImgUploaded: async (
     _,
     { pathImg, productId },
-    { Products, Cloudinary }
+    { Products, Cloudinary },
   ) => {
     try {
       const productExists = await Products.findById(productId)
@@ -216,7 +216,7 @@ const Mutation = {
       const pathArr = pathImg.split('/').slice(-1)[0].split('.')[0]
 
       const result = await Cloudinary.v2.uploader.destroy(
-        `${process.env.CLOUDINARINAME}/${pathArr}`
+        `${process.env.CLOUDINARINAME}/${pathArr}`,
       )
       if (!result) throw 'fallo al eliminar la imagen del servidor'
 
@@ -237,7 +237,7 @@ const Mutation = {
     const result = await Products.findByIdAndUpdate(
       _id,
       { ...data },
-      { new: true }
+      { new: true },
     )
     return result
   },
@@ -246,10 +246,10 @@ const Mutation = {
     if (!productExist) throw new Error('El producto no existe')
     const result = await Products.findByIdAndDelete(_id)
 
-    imgs.map(async i => {
+    imgs.map(async (i) => {
       const pathArr = i.split('/').slice(-1)[0].split('.')[0]
       await Cloudinary.v2.uploader.destroy(
-        `${process.env.CLOUDINARINAME}/${pathArr}`
+        `${process.env.CLOUDINARINAME}/${pathArr}`,
       )
     })
 
@@ -274,19 +274,19 @@ const Mutation = {
   updateBanner: async (
     _,
     { path, _id, href, pubId, newPubId },
-    { Cloudinary, AdminDB }
+    { Cloudinary, AdminDB },
   ) => {
     try {
       const adminExist = await AdminDB.findById(_id)
       if (!adminExist) throw 'Admin no existe'
       if (path && !href) {
         const file = await AdminDB.find({ _id }, { banner: 1 })
-        file[0]?.banner.map(async f => {
+        file[0]?.banner.map(async (f) => {
           if (f.pubId === pubId) {
             const pathArr = f.path.split('/').slice(-1)[0].split('.')[0]
 
             await Cloudinary.v2.uploader.destroy(
-              `${process.env.CLOUDINARINAME}/${pathArr}`
+              `${process.env.CLOUDINARINAME}/${pathArr}`,
             )
 
             await AdminDB.findByIdAndUpdate(_id, {
@@ -300,7 +300,7 @@ const Mutation = {
                   banner: { href: f.href, path, pubId: newPubId },
                 },
               },
-              { new: true }
+              { new: true },
             )
           }
         })
@@ -309,7 +309,7 @@ const Mutation = {
       } else if (href && !path && pubId && _id) {
         const file = await AdminDB.find({ _id }, { banner: 1 })
 
-        file[0].banner.map(async f => {
+        file[0].banner.map(async (f) => {
           if (f.pubId === pubId) {
             await AdminDB.findByIdAndUpdate(_id, {
               $pull: { banner: { pubId } },
@@ -344,7 +344,7 @@ const Mutation = {
       const pathArr = path.split('/').slice(-1)[0].split('.')[0]
 
       const result = await Cloudinary.v2.uploader.destroy(
-        `${process.env.CLOUDINARINAME}/${pathArr}`
+        `${process.env.CLOUDINARINAME}/${pathArr}`,
       )
       if (!result) throw 'fallo al eliminar la imagen del servidor'
       return 'eliminado'
@@ -359,7 +359,7 @@ const Mutation = {
       await Products.findByIdAndUpdate(
         _id,
         { $inc: { stock: -1 } },
-        { new: true }
+        { new: true },
       )
       return 'actualizado'
     } catch (error) {

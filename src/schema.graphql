@@ -1,8 +1,8 @@
 type Query {
   product(_id: ID, typeProduct: String, limit: Int): [Products!]!
-  user(_id: ID!): User!
+  user(_id: ID): [User!]!
   admin(_id: ID!): Admin!
-  thirdUser(_id: ID!): UserThirdServices!
+  thirdUser(_id: ID): [UserThirdServices!]!
 }
 
 type Mutation {

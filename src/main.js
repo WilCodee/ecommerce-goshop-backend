@@ -47,4 +47,5 @@ const opts = {
 }
 
 import './db'
-server.start(opts, ({ port }) => console.log(`http://localhost:${port}`))
+// server.start(opts, ({ port }) => console.log(`http://localhost:${port}`))
+export default server.express

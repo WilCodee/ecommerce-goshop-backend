@@ -11,7 +11,8 @@
     "prod": "cross-env NODE_ENV=production npm-run-all prepare server",
     "dev": "cross-env NODE_ENV=development npm-run-all prepare server",
     "watch:dev": "nodemon",
-    "start": "npm run prod"
+    "start": "npm run prod",
+    "build": "npm run prepare"
   },
   "dependencies": {
     "bcrypt": "4.0.1",

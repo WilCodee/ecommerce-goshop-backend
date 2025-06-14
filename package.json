@@ -6,12 +6,13 @@
   "scripts": {
     "clean": "rimraf dist",
     "transpile": "babel ./src --out-dir dist --copy-files",
-    "prepare": "npm-run-all clean transpile",
+    "prepare": "npm-run-all clean transpile posttranspile",
     "server": "node ./dist/main.js",
     "prod": "cross-env NODE_ENV=production npm-run-all prepare server",
     "dev": "cross-env NODE_ENV=development npm-run-all prepare server",
     "watch:dev": "nodemon",
     "start": "npm run prod",
+    "posttranspile": "cp ./src/schema.graphql ./dist/schema.graphql",
     "build": "npm run prepare"
   },
   "dependencies": {

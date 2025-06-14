@@ -11,6 +11,7 @@ import UserThirdServices from './models/UserThirdServices'
 import Products from './models/Product'
 import Cloudinary from 'cloudinary'
 import Telegram from 'telegraf/telegram'
+import cors from 'cors'
 
 const telegram = new Telegram(process.env.TOKEN_TELEGRAM)
 Cloudinary.config({
@@ -42,16 +43,25 @@ const server = new GraphQLServer({
   },
 })
 
-const opts = {
-  cors: {
-    origin: ['https://mi-tienda-online.vercel.app', 'http://localhost:3000'],
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    preflightContinue: false,
-    optionsSuccessStatus: 204,
-  },
-  port: process.env.PORT,
-  playground: '/gql',
+const corsOptions = {
+  origin: ['https://mi-tienda-online.vercel.app', 'http://localhost:3000'],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
 }
+
+// const opts = {
+//   cors: {
+//     origin: ['https://mi-tienda-online.vercel.app', 'http://localhost:3000'],
+//     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//     preflightContinue: false,
+//     optionsSuccessStatus: 204,
+//   },
+//   port: process.env.PORT,
+//   playground: '/gql',
+// }
+
+server.express.use(cors(corsOptions))
 
 import './db'
 // server.start(opts, ({ port }) => console.log(`http://localhost:${port}`))

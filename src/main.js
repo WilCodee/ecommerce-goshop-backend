@@ -48,6 +48,7 @@ const corsOptions = {
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   preflightContinue: false,
   optionsSuccessStatus: 204,
+  playground: '/gql',
 }
 
 // const opts = {

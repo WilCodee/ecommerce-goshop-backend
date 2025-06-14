@@ -1,3 +1,5 @@
+import fs from 'fs'
+import path from 'path'
 import { GraphQLServer } from 'graphql-yoga'
 import Query from './resolvers/query'
 import Mutation from './resolvers/mutation'
@@ -27,8 +29,13 @@ const context = {
   telegram,
 }
 
+const typeDefs = fs.readFileSync(
+  path.join(process.cwd(), 'dist/schema.graphql'),
+  'utf-8'
+)
 const server = new GraphQLServer({
-  typeDefs: './dist/schema.graphql',
+  // typeDefs: './dist/schema.graphql',
+  typeDefs,
   resolvers,
   context: (request) => {
     return { ...request, ...context }
